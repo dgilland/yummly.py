@@ -28,8 +28,8 @@ import yummly
 The Yummly API requires an ID and Key. This can be set by doing:
 
 ```python
-yummly.api_id = MY_API_ID
-yummly.api_key = MY_API_KEY
+yummly.api_id = YOUR_API_ID
+yummly.api_key = YOUR_API_KEY
 ```
 
 ### Search Recipes
@@ -76,6 +76,20 @@ Tests are located in `tests/`. They can be executed with `nose` by running `run_
 $ python run_tests.py
 ```
 
+### Test Config File
+
+A test config file is required to run the tests. Create `tests/config.json` with the following properties:
+
+```json
+{
+    "api_id": "your api id",
+    "api_key": "your api key"
+}
+```
+
+This file will be loaded automatically when the tests are run.
+
 ## TODO
 
 - Support all search criteria
+- Options for sorting search results
