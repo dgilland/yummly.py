@@ -1,3 +1,6 @@
+'''
+Python module for Yummly API: https://developer.yummly.com
+'''
 
 import requests
 
