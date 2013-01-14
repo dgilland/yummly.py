@@ -89,6 +89,10 @@ A test config file is required to run the tests. Create `tests/config.json` with
 
 This file will be loaded automatically when the tests are run.
 
+## License
+
+This software is licensed under the FreeBSD License.
+
 ## TODO
 
 - Support all search criteria
