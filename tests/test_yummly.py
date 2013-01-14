@@ -4,7 +4,7 @@ import os
 import unittest
 import json
 
-import yummly
+from yummly import yummly
 
 HERE = os.path.dirname(__file__)
 
