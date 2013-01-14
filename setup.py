@@ -11,6 +11,7 @@ setup(
     author_email        = 'dgilland@gmail.com',
     url                 = 'https://github.com/dgilland/yummly.py',
     license             = 'BSD',
+    packages            = [ 'yummly' ],
     install_requires    = open( 'requirements.txt' ).read().split()
 )
 
