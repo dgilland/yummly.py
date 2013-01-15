@@ -46,15 +46,40 @@ Limit your results to a maximum:
 
 ```python
 # return the first 10 results
-results = yummly.search('chicken marsala', limit=10)
+results = yummly.search('chicken marsala', maxResults=10)
 ```
 
 Offset the results for pagination:
 
 ```python
 # return 2nd page of results
-results = yummly.search('pulled pork', limit=10, offset=10)
+results = yummly.search('pulled pork', maxResults=10, start=10)
 ```
+
+Provide search parameters:
+
+```python
+params = {
+    'q': 'pork chops',
+    'start': 0,
+    'maxResult': 40,
+    'requirePicutres': True,
+    'allowedIngredient[]': ['salt', 'pepper'],
+    'excludedIngredient[]': ['cumin', 'paprika'],
+    'maxTotalTimeInSeconds': 3600,
+    'facetField[]': ['ingredient', 'diet'],
+    'flavor.meaty.min': 0.5,
+    'flavor.meaty.max': 1,
+    'flavor.sweet.min': 0,
+    'flavor.sweet.max': 0.5,
+    'nutrition.FAT.min': 0,
+    'nutrition.FAT.max': 15
+}
+
+results = yummly.search( **params )
+```
+
+For a full list of support search parameters, see section _The Search Recipes Call_ located at: https://developer.yummly.com/intro
 
 Example search response: https://developer.yummly.com/wiki/search-recipes-response-sample
 
@@ -95,5 +120,6 @@ This software is licensed under the FreeBSD License.
 
 ## TODO
 
-- Support all search criteria
-- Options for sorting search results
+- Provide helpers for complex search parameters like nutrition, flavors, and metadata
+- Metadata look-up
+- Options for sorting search results (maybe)
