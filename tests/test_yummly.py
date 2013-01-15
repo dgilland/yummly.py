@@ -115,7 +115,8 @@ class TestYummly( unittest.TestCase ):
         assert( offset_results['matches'][0]['id'] == results['matches'][start]['id'] )
 
     def test_recipe( self ):
-        self.test_recipe = self.test_recipe or self.yummly.recipe( self.test_recipe_id )
+        '''Test fetching recipe data'''
+        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
 
         # verify API returns expected fields: https://developer.yummly.com/wiki/get-recipe-response-sample
         expected_fields = [
@@ -136,12 +137,14 @@ class TestYummly( unittest.TestCase ):
         ]
 
         # verify we received the expected fields
-        assert( TestYummly.verify_fields( expected_fields, self.test_recipe.keys() ) )
+        assert( TestYummly.verify_fields( expected_fields, self.sample_recipe.keys() ) )
 
     def test_recipe_nutrition( self ):
-        self.test_recipe = self.test_recipe or self.yummly.recipe( self.test_recipe_id )
+        '''Test nutrition fields present in recipe data'''
 
-        nutrition = self.test_recipe['nutritionEstimates'][0]
+        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
+
+        nutrition = self.sample_recipe['nutritionEstimates'][0]
 
         expected_fields = [
             'attribute',
@@ -164,9 +167,11 @@ class TestYummly( unittest.TestCase ):
         assert( TestYummly.verify_fields( expected_unit_fields, nutrition_unit.keys() ) )
 
     def test_recipe_images( self ):
-        self.test_recipe = self.test_recipe or self.yummly.recipe( self.test_recipe_id )
+        '''Test image fields present in recipe data'''
 
-        images = self.test_recipe['images'][0]
+        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
+
+        images = self.sample_recipe['images'][0]
 
         expected_fields = [
             'hostedLargeUrl',
@@ -176,9 +181,11 @@ class TestYummly( unittest.TestCase ):
         assert( TestYummly.verify_fields( expected_fields, images.keys() ) )
 
     def test_recipe_source( self ):
-        self.test_recipe = self.test_recipe or self.yummly.recipe( self.test_recipe_id )
+        '''Test source fields present in recipe data'''
 
-        source = self.test_recipe['source']
+        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
+
+        source = self.sample_recipe['source']
 
         expected_fields = [
             'sourceRecipeUrl',
