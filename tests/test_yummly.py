@@ -49,9 +49,9 @@ class TestYummly( unittest.TestCase ):
         TestYummly.wait()
 
         q       = 'chicken casserole'
-        limit   = 5
+        maxResult = 5
 
-        results = self.yummly.search( q, limit=limit )
+        results = self.yummly.search( q, maxResult=maxResult )
 
         # verify fields present
         expected_fields = [
@@ -73,12 +73,13 @@ class TestYummly( unittest.TestCase ):
 
     def test_search_match( self ):
         '''Test search match return'''
-        q       = 'chicken'
-        limit   = 1
 
-        results = self.yummly.search( q, limit=limit )
         TestYummly.wait()
 
+        q = 'pork'
+        maxResult = 1
+
+        results = self.yummly.search( q, maxResult=maxResult )
 
         match = results['matches'][0]
 
@@ -100,24 +101,24 @@ class TestYummly( unittest.TestCase ):
     def test_search_pagination( self ):
         '''Test search pagination'''
 
-        q       = 'chicken casserole'
-        limit   = 10
         TestYummly.wait()
 
+        q = 'fish'
+        maxResult = 10
 
-        results = self.yummly.search( q, limit=limit )
+        results = self.yummly.search( q, maxResult=maxResult )
 
-        # verify limit enforced
+        # verify maxResult enforced
         len_matches = len( results['matches'] )
-        assert( len_matches == limit )
+        assert( len_matches == maxResult )
 
         # sanity check that grand total of matching recipes is at least as many as matches returned
         assert( results['totalMatchCount'] >= len_matches )
 
-        # check that offsetting works as expected: offset is number of records to skip
-        offset = 5
-        offset_results = self.yummly.search( q, limit=limit, offset=offset )
-        assert( offset_results['matches'][0]['id'] == results['matches'][offset]['id'] )
+        # check that offsetting works as expected: start is number of records to skip
+        start = 5
+        offset_results = self.yummly.search( q, maxResult=maxResult, start=start )
+        assert( offset_results['matches'][0]['id'] == results['matches'][start]['id'] )
 
     def test_recipe( self ):
         self.test_recipe = self.test_recipe or self.yummly.recipe( self.test_recipe_id )
@@ -198,7 +199,7 @@ class TestYummly( unittest.TestCase ):
         TestYummly.wait()
 
         q = 'chicken'
-        s = self.yummly.search( q, limit=1 )
+        s = self.yummly.search( q, maxResult=1 )
 
         search = s['matches'][0]
         recipe = self.yummly.recipe( search['id'] )
