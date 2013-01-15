@@ -30,8 +30,8 @@ class TestYummly( unittest.TestCase ):
         TestYummly.wait()
 
     @staticmethod
-    def wait():
-        sleep(0.5)
+    def wait(t=1.0):
+        sleep(t)
 
     @staticmethod
     def verify_fields( expected, actual ):
