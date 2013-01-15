@@ -46,8 +46,6 @@ class TestYummly( unittest.TestCase ):
     def test_search( self ):
         '''Test basic search functionality'''
 
-        TestYummly.wait()
-
         q       = 'chicken casserole'
         maxResult = 5
 
@@ -74,8 +72,6 @@ class TestYummly( unittest.TestCase ):
     def test_search_match( self ):
         '''Test search match return'''
 
-        TestYummly.wait()
-
         q = 'pork'
         maxResult = 1
 
@@ -100,8 +96,6 @@ class TestYummly( unittest.TestCase ):
 
     def test_search_pagination( self ):
         '''Test search pagination'''
-
-        TestYummly.wait()
 
         q = 'fish'
         maxResult = 10
@@ -195,8 +189,6 @@ class TestYummly( unittest.TestCase ):
         assert( TestYummly.verify_fields( expected_fields, source.keys() ) )
 
     def test_recipe_from_search( self ):
-
-        TestYummly.wait()
 
         q = 'chicken'
         s = self.yummly.search( q, maxResult=1 )
