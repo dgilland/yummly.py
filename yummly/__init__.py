@@ -2,14 +2,17 @@
 Python module for Yummly API: https://developer.yummly.com
 '''
 
+import json
+
 import requests
 
 # Yummly API: https://developer.yummly.com
 
 # API URLs
-URL_BASE    = 'http://api.yummly.com/v1'
-URL_GET     = URL_BASE + '/api/recipe/'
-URL_SEARCH  = URL_BASE + '/api/recipes'
+URL_BASE    = 'http://api.yummly.com/v1/api'
+URL_GET     = URL_BASE + '/recipe/'
+URL_SEARCH  = URL_BASE + '/recipes'
+URL_META    = URL_BASE + '/metadata'
 
 # API auth properties which should be set externally
 api_id  = None
@@ -56,6 +59,31 @@ def search( q, maxResult=40, start=0, **params ):
     results     = _extract_response( response )
     return results
 
+METADATA_KEYS = [
+    'ingredient',
+    'holiday',
+    'diet',
+    'allergy',
+    'technique',
+    'cuisine',
+    'course',
+    'source',
+    'brand',
+]
+
+def metadata( key ):
+    if key not in METADATA_KEYS:
+        raise YummlyError( 'Invalid metadata key. Valid keys are:' + ', '.join(METADATA_KEYS) )
+
+    url         = '{0}/{1}'.format( URL_META, key )
+    response    = _request( url )
+
+    try:
+        data    = _extract_metadata( response )
+    except Exception:
+        raise YummlyError( 'Could not extract metadata' )
+
+    return data
 
 ### Helper functions
 
@@ -100,4 +128,19 @@ def _request( url, params=None ):
 def _extract_response( response ):
     '''Extract data from api resposne'''
     return response.json()
+
+def _extract_metadata( response ):
+    '''
+    Extract data from metadata response
+
+    @note: metadata responses are jsonp strings of the form:
+        set_metadata('meta name', [{...}, {...}, ...]);
+    '''
+
+    text    = response.text
+    start   = text.index('[')
+    end     = text.index(']') + 1
+    parsed  = text[ start:end ]
+
+    return json.loads( parsed )
 

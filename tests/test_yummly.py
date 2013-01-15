@@ -342,3 +342,12 @@ class TestYummly( unittest.TestCase ):
             assert( nutrition_restrictions[nut]['min'] == ranges['min'] )
             assert( nutrition_restrictions[nut]['max'] == ranges['max'] )
 
+    def test_metadata( self ):
+        for key in self.yummly.METADATA_KEYS:
+            data = self.yummly.metadata( key )
+            assert( len(data) > 0 )
+            TestYummly.wait(0.5)
+
+    def test_metadata_invalid( self ):
+        self.assertRaises( self.yummly.YummlyError, self.yummly.metadata, 'invalid' )
+
