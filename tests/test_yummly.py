@@ -1,8 +1,8 @@
 
 import os
-
 import unittest
 import json
+from time import sleep
 
 import yummly
 
@@ -25,6 +25,11 @@ class TestYummly( unittest.TestCase ):
         self.test_recipe = None
 
     @staticmethod
+    def wait():
+        # wait some time inbetween tests for throttling self
+        sleep(0.5)
+
+    @staticmethod
     def verify_fields( expected, actual ):
         for field in expected:
             assert( field in actual )
@@ -33,6 +38,8 @@ class TestYummly( unittest.TestCase ):
 
     def test_search( self ):
         '''Test basic search functionality'''
+
+        TestYummly.wait()
 
         q       = 'chicken casserole'
         limit   = 5
@@ -63,6 +70,8 @@ class TestYummly( unittest.TestCase ):
         limit   = 1
 
         results = self.yummly.search( q, limit=limit )
+        TestYummly.wait()
+
 
         match = results['matches'][0]
 
@@ -86,6 +95,8 @@ class TestYummly( unittest.TestCase ):
 
         q       = 'chicken casserole'
         limit   = 10
+        TestYummly.wait()
+
 
         results = self.yummly.search( q, limit=limit )
 
@@ -176,6 +187,9 @@ class TestYummly( unittest.TestCase ):
         assert( TestYummly.verify_fields( expected_fields, source.keys() ) )
 
     def test_recipe_from_search( self ):
+
+        TestYummly.wait()
+
         q = 'chicken'
         s = self.yummly.search( q, limit=1 )
 
