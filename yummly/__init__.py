@@ -31,22 +31,26 @@ def recipe( recipe_id ):
     result      = _extract_response( response )
     return result
 
-def search( q, limit=40, offset=0 ):
+def search( q, maxResult=40, start=0, **params ):
     '''
     Prepares yummly search API request
 
     :param q: search string
-    :param limit: max results
-    :param offset: pagination offset in # of records (e.g. offset=5 means skip first 5 results)
+    :param maxResult: max results
+    :param start: pagination offset in # of records (e.g. offset=5 means skip first 5 results)
+    :param **params: optional kargs corresponding to Yummly supported search parameters
 
     '''
 
     url     = URL_SEARCH
-    params  = {
+
+    # copy params to leave source unmodified
+    params  = params.copy()
+    params.update({
         'q':            q,
-        'maxResult':    limit,
-        'start':        offset
-    }
+        'maxResult':    maxResult,
+        'start':        start
+    })
 
     response    = _request( url, params=params )
     results     = _extract_response( response )
