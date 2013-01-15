@@ -31,13 +31,15 @@ class TestYummly( unittest.TestCase ):
 
     @staticmethod
     def wait():
-        # wait some time inbetween tests for throttling self
         sleep(0.5)
 
     @staticmethod
     def verify_fields( expected, actual ):
         for field in expected:
+            try:
             assert( field in actual )
+            except AssertionError:
+                raise AssertionError('Missing field:' + field)
 
         return True
 
