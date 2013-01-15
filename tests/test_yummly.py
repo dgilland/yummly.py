@@ -37,7 +37,7 @@ class TestYummly( unittest.TestCase ):
     def verify_fields( expected, actual ):
         for field in expected:
             try:
-            assert( field in actual )
+                assert( field in actual )
             except AssertionError:
                 raise AssertionError('Missing field:' + field)
 
@@ -46,7 +46,7 @@ class TestYummly( unittest.TestCase ):
     def test_search( self ):
         '''Test basic search functionality'''
 
-        q       = 'chicken casserole'
+        q = 'chicken casserole'
         maxResult = 5
 
         results = self.yummly.search( q, maxResult=maxResult )
@@ -61,10 +61,6 @@ class TestYummly( unittest.TestCase ):
         ]
 
         assert( TestYummly.verify_fields( expected_fields, results.keys() ) )
-
-        # sanity check that our search terms are included
-        for term in q.split():
-            assert( term in results['criteria']['terms'] )
 
         # we got some matches
         assert( len( results['matches'] ) > 0 )
@@ -196,6 +192,7 @@ class TestYummly( unittest.TestCase ):
         assert( TestYummly.verify_fields( expected_fields, source.keys() ) )
 
     def test_recipe_from_search( self ):
+        '''Test that recipe fetched from search matches up with search results'''
 
         q = 'chicken'
         s = self.yummly.search( q, maxResult=1 )
@@ -220,4 +217,128 @@ class TestYummly( unittest.TestCase ):
 
         # same display name
         assert( recipe['source']['sourceDisplayName'] == search['sourceDisplayName'] )
+
+    def test_search_parameters_basic( self ):
+        '''Test basic search parameters received as expected'''
+
+        params = {
+            'q':                        'chicken',
+            'start':                    0,
+            'maxResult':                40,
+            'requirePictures':          True,
+            'allowedIngredient[]':      ['salt', 'pepper'],
+            'excludedIngredient[]':     ['cumin', 'paprika'],
+            'maxTotalTimeInSeconds':    60*60, # 1 hour
+            'facetField[]':             ['ingredient', 'diet'],
+        }
+
+        results = self.yummly.search( **params )
+
+        criteria = results['criteria']
+
+        # verify search terms
+        for term in params['q'].split():
+            assert( term in criteria['terms'] )
+
+        # verify require pictures
+        assert( criteria['requirePictures'] == params['requirePictures'] )
+
+        # verify allowed ingredients
+        assert( 'allowedIngredients' in criteria )
+        assert( set(criteria['allowedIngredients']) == set(params['allowedIngredient[]']) )
+
+        # verify exluded ingredients
+        assert( 'excludedIngredients' in criteria )
+        assert( set(criteria['excludedIngredients']) == set(params['excludedIngredient[]']) )
+
+        # verify results are <= max total time
+        # @note: this only verifies what's returned so it's possible this value is ignored
+        for match in results['matches']:
+            assert( match['totalTimeInSeconds'] <= params['maxTotalTimeInSeconds'] )
+
+        # verify facets
+        assert( set(criteria['facetFields']) == set(params['facetField[]']) )
+        assert( results['facetCounts']['ingredient'] >= 0 )
+        assert( results['facetCounts']['diet'] >= 0 )
+
+    def test_search_parameters_flavor( self ):
+        '''Test flavor search parameters received as expected'''
+
+        flavors = {
+            'sweet': {
+                'min': 0,
+                'max': 0.75,
+            },
+            'meaty': {
+                'min': 0,
+                'max': 1,
+            },
+            'bitter': {
+                'min': 0,
+                'max': 0.25,
+            },
+            'piquant': {
+                'min': 0,
+                'max': 0.5,
+            }
+        }
+
+        params = {
+            'q':                        'chicken',
+            'start':                    0,
+            'maxResult':                1,
+            'flavor.sweet.min':         flavors['sweet']['min'],
+            'flavor.sweet.max':         flavors['sweet']['max'],
+            'flavor.meaty.min':         flavors['meaty']['min'],
+            'flavor.meaty.max':         flavors['meaty']['max'],
+            'flavor.bitter.min':        flavors['bitter']['min'],
+            'flavor.bitter.max':        flavors['bitter']['max'],
+            'flavor.piquant.min':       flavors['piquant']['min'],
+            'flavor.piquant.max':       flavors['piquant']['max'],
+        }
+
+        results = self.yummly.search( **params )
+
+        criteria = results['criteria']
+
+        # verify flavors
+        attribute_ranges = criteria['attributeRanges']
+        for flavor, ranges in flavors.iteritems():
+            attr = 'flavor-' + flavor
+            assert( attribute_ranges[attr]['min'] == ranges['min'] )
+            assert( attribute_ranges[attr]['max'] == ranges['max'] )
+
+    def test_search_parameters_nutrition( self ):
+        '''Test nutrition search parameters received as expected'''
+
+        nutrition = {
+            'FAT': {
+                'min': 0,
+                'max': 10,
+            },
+            'SUGAR': {
+                'min': 0,
+                'max': 5,
+            }
+        }
+
+        params = {
+            'q':                        'chicken',
+            'start':                    0,
+            'maxResult':                1,
+            'nutrition.FAT.min':        nutrition['FAT']['min'],
+            'nutrition.FAT.max':        nutrition['FAT']['max'],
+            'nutrition.SUGAR.min':      nutrition['SUGAR']['min'],
+            'nutrition.SUGAR.max':      nutrition['SUGAR']['max'],
+        }
+
+        results = self.yummly.search( **params )
+
+        criteria = results['criteria']
+
+        # verify nutrition
+        nutrition_restrictions = criteria['nutritionRestrictions']
+        for nut, ranges in nutrition.iteritems():
+            assert( nutrition_restrictions[nut]['min'] == ranges['min'] )
+            assert( nutrition_restrictions[nut]['max'] == ranges['max'] )
 
