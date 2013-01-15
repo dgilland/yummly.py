@@ -10,19 +10,24 @@ HERE = os.path.dirname(__file__)
 
 class TestYummly( unittest.TestCase ):
 
-    def setUp( self ):
+    @classmethod
+    def setUpClass( cls ):
         config_file = os.path.join( HERE, 'config.json' )
 
         with open( config_file ) as f:
             config = json.load(f)
 
-        self.yummly = yummly
-        self.yummly.api_id  = config.get('api_id')
-        self.yummly.api_key = config.get('api_key')
+        cls.yummly = yummly
+        cls.yummly.api_id  = config.get('api_id')
+        cls.yummly.api_key = config.get('api_key')
 
-        self.test_recipe_id = 'Hot-Turkey-Salad-Sandwiches-Allrecipes'
+        cls.sample_recipe_id = 'Hot-Turkey-Salad-Sandwiches-Allrecipes'
         # cache recipe results to decrease API hits
-        self.test_recipe = None
+        cls.sample_recipe = None
+
+    def setUp( self ):
+        # wait some time inbetween tests for throttling self
+        TestYummly.wait()
 
     @staticmethod
     def wait():
