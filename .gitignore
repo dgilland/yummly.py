@@ -38,4 +38,4 @@ nosetests.xml
 /env
 
 # test config file
-/tests/config.json
+/yummly/tests/config.json
