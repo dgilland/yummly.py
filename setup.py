@@ -1,17 +1,24 @@
 
 from setuptools import setup
 
-from _version import __version__
-
 setup(
     name                = 'yummly',
-    version             = __version__,
-    description         = 'Python module for Yummly API: https://developer.yummly.com',
+    version             = open( 'VERSION' ),
+    description         = 'Python package for Yummly API: https://developer.yummly.com',
+    long_description    = open('README.rst').read(),
     author              = 'Derrick Gilland',
     author_email        = 'dgilland@gmail.com',
     url                 = 'https://github.com/dgilland/yummly.py',
+    packages            = [ 'yummly', 'yummly.tests' ],
+    install_requires    = open( 'requirements.txt' ).read().split(),
+    keywords            = 'yummly recipes',
     license             = 'BSD',
-    packages            = [ 'yummly' ],
-    install_requires    = open( 'requirements.txt' ).read().split()
+    classifiers         = [
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'License :: OSI Approved :: BSD License'
+    ]
 )
 
