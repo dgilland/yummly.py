@@ -17,13 +17,9 @@ class TestYummly( unittest.TestCase ):
         with open( config_file ) as f:
             config = json.load(f)
 
-        cls.yummly = yummly
-        cls.yummly.api_id  = config.get('api_id')
-        cls.yummly.api_key = config.get('api_key')
+        cls.yummly = yummly.Client( api_id=config.get('api_id'), api_key=config.get('api_key') )
 
         cls.sample_recipe_id = 'Hot-Turkey-Salad-Sandwiches-Allrecipes'
-        # cache recipe results to decrease API hits
-        cls.sample_recipe = None
 
     def setUp( self ):
         # wait some time inbetween tests for throttling self
@@ -33,15 +29,11 @@ class TestYummly( unittest.TestCase ):
     def wait(t=1.0):
         sleep(t)
 
-    @staticmethod
-    def verify_fields( expected, actual ):
-        for field in expected:
-            try:
-                assert( field in actual )
-            except AssertionError:
-                raise AssertionError('Missing field:' + field)
+    def test_recipe( self ):
+        '''Test fetching recipe data'''
+        recipe = self.yummly.recipe( self.sample_recipe_id )
 
-        return True
+        assert( recipe )
 
     def test_search( self ):
         '''Test basic search functionality'''
@@ -51,44 +43,8 @@ class TestYummly( unittest.TestCase ):
 
         results = self.yummly.search( q, maxResult=maxResult )
 
-        # verify fields present
-        expected_fields = [
-            'attribution',
-            'totalMatchCount',
-            'facetCounts',
-            'matches',
-            'criteria',
-        ]
-
-        assert( TestYummly.verify_fields( expected_fields, results.keys() ) )
-
         # we got some matches
-        assert( len( results['matches'] ) > 0 )
-
-    def test_search_match( self ):
-        '''Test search match return'''
-
-        q = 'pork'
-        maxResult = 1
-
-        results = self.yummly.search( q, maxResult=maxResult )
-
-        match = results['matches'][0]
-
-        # verify expected fields
-        expected_fields = [
-            'attributes',
-            'flavors',
-            'rating',
-            'id',
-            'smallImageUrls',
-            'sourceDisplayName',
-            'totalTimeInSeconds',
-            'ingredients',
-            'recipeName'
-        ]
-
-        assert( TestYummly.verify_fields( expected_fields, match.keys() ) )
+        assert( len( results.matches ) > 0 )
 
     def test_search_pagination( self ):
         '''Test search pagination'''
@@ -99,124 +55,47 @@ class TestYummly( unittest.TestCase ):
         results = self.yummly.search( q, maxResult=maxResult )
 
         # verify maxResult enforced
-        len_matches = len( results['matches'] )
+        len_matches = len( results.matches )
         assert( len_matches == maxResult )
 
         # sanity check that grand total of matching recipes is at least as many as matches returned
-        assert( results['totalMatchCount'] >= len_matches )
+        assert( results.totalMatchCount >= len_matches )
 
         # check that offsetting works as expected: start is number of records to skip
         start = 5
         offset_results = self.yummly.search( q, maxResult=maxResult, start=start )
-        assert( offset_results['matches'][0]['id'] == results['matches'][start]['id'] )
-
-    def test_recipe( self ):
-        '''Test fetching recipe data'''
-        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
-
-        # verify API returns expected fields: https://developer.yummly.com/wiki/get-recipe-response-sample
-        expected_fields = [
-            'attribution',
-            'ingredientLines',
-            'flavors',
-            'nutritionEstimates',
-            'images',
-            'name',
-            'yield',
-            'totalTime',
-            'attributes',
-            'totalTimeInSeconds',
-            'rating',
-            'numberOfServings',
-            'source',
-            'id',
-        ]
-
-        # verify we received the expected fields
-        assert( TestYummly.verify_fields( expected_fields, self.sample_recipe.keys() ) )
-
-    def test_recipe_nutrition( self ):
-        '''Test nutrition fields present in recipe data'''
-
-        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
-
-        nutrition = self.sample_recipe['nutritionEstimates'][0]
-
-        expected_fields = [
-            'attribute',
-            'description',
-            'value',
-            'unit',
-        ]
-
-        assert( TestYummly.verify_fields( expected_fields, nutrition.keys() ) )
-
-        nutrition_unit = nutrition['unit']
-
-        expected_unit_fields = [
-            'name',
-            'abbreviation',
-            'plural',
-            'pluralAbbreviation'
-        ]
-
-        assert( TestYummly.verify_fields( expected_unit_fields, nutrition_unit.keys() ) )
-
-    def test_recipe_images( self ):
-        '''Test image fields present in recipe data'''
-
-        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
-
-        images = self.sample_recipe['images'][0]
-
-        expected_fields = [
-            'hostedLargeUrl',
-            'hostedSmallUrl',
-        ]
-
-        assert( TestYummly.verify_fields( expected_fields, images.keys() ) )
-
-    def test_recipe_source( self ):
-        '''Test source fields present in recipe data'''
-
-        self.sample_recipe = self.sample_recipe or self.yummly.recipe( self.sample_recipe_id )
-
-        source = self.sample_recipe['source']
-
-        expected_fields = [
-            'sourceRecipeUrl',
-            'sourceSiteUrl',
-            'sourceDisplayName',
-        ]
-
-        assert( TestYummly.verify_fields( expected_fields, source.keys() ) )
+        assert( offset_results.matches[0].id == results.matches[start].id )
 
     def test_recipe_from_search( self ):
-        '''Test that recipe fetched from search matches up with search results'''
+        '''
+        Test that recipe fetched from search matches up with search results
+        @note: verifying that a single result isn't sufficient to guarantee this can be done for all search results, nor would it be feasible to do
+        @todo: consider dropping this test or expanding results
+        '''
 
         q = 'chicken'
         s = self.yummly.search( q, maxResult=1 )
 
-        search = s['matches'][0]
-        recipe = self.yummly.recipe( search['id'] )
+        search = s.matches[0]
+        recipe = self.yummly.recipe( search.id )
 
         # ids should match
-        assert( recipe['id'] == search['id'] )
+        assert( recipe.id == search.id )
 
         # both should have same number of ingredients/lines
-        assert( len(recipe['ingredientLines']) == len(search['ingredients']) )
+        assert( len(recipe.ingredientLines) == len(search.ingredients) )
 
         # same prep+cook time
-        assert( recipe['totalTimeInSeconds'] == search['totalTimeInSeconds'] )
+        assert( recipe.totalTimeInSeconds == search.totalTimeInSeconds )
 
         # same recipe name
-        assert( recipe['name'] == search['recipeName'] )
+        assert( recipe.name == search.recipeName )
 
         # same attributes
-        assert( recipe['attributes'] == search['attributes'] )
+        assert( recipe.attributes == search.attributes )
 
         # same display name
-        assert( recipe['source']['sourceDisplayName'] == search['sourceDisplayName'] )
+        assert( recipe.source.sourceDisplayName == search.sourceDisplayName )
 
     def test_search_parameters_basic( self ):
         '''Test basic search parameters received as expected'''
@@ -234,32 +113,30 @@ class TestYummly( unittest.TestCase ):
 
         results = self.yummly.search( **params )
 
-        criteria = results['criteria']
+        criteria = results.criteria
 
         # verify search terms
         for term in params['q'].split():
-            assert( term in criteria['terms'] )
+            assert( term in criteria.terms )
 
         # verify require pictures
-        assert( criteria['requirePictures'] == params['requirePictures'] )
+        assert( criteria.requirePictures == params['requirePictures'] )
 
         # verify allowed ingredients
-        assert( 'allowedIngredients' in criteria )
-        assert( set(criteria['allowedIngredients']) == set(params['allowedIngredient[]']) )
+        assert( set(criteria.allowedIngredients) == set(params['allowedIngredient[]']) )
 
         # verify exluded ingredients
-        assert( 'excludedIngredients' in criteria )
-        assert( set(criteria['excludedIngredients']) == set(params['excludedIngredient[]']) )
+        assert( set(criteria.excludedIngredients) == set(params['excludedIngredient[]']) )
 
         # verify results are <= max total time
         # @note: this only verifies what's returned so it's possible this value is ignored
-        for match in results['matches']:
-            assert( match['totalTimeInSeconds'] <= params['maxTotalTimeInSeconds'] )
+        for match in results.matches:
+            assert( match.totalTimeInSeconds <= params['maxTotalTimeInSeconds'] )
 
         # verify facets
-        assert( set(criteria['facetFields']) == set(params['facetField[]']) )
-        assert( results['facetCounts']['ingredient'] >= 0 )
-        assert( results['facetCounts']['diet'] >= 0 )
+        assert( set(criteria.facetFields) == set(params['facetField[]']) )
+        assert( results.facetCounts['ingredient'] >= 0 )
+        assert( results.facetCounts['diet'] >= 0 )
 
     def test_search_parameters_flavor( self ):
         '''Test flavor search parameters received as expected'''
@@ -299,10 +176,10 @@ class TestYummly( unittest.TestCase ):
 
         results = self.yummly.search( **params )
 
-        criteria = results['criteria']
+        criteria = results.criteria
 
         # verify flavors
-        attribute_ranges = criteria['attributeRanges']
+        attribute_ranges = criteria.attributeRanges
         for flavor, ranges in flavors.iteritems():
             attr = 'flavor-' + flavor
             assert( attribute_ranges[attr]['min'] == ranges['min'] )
@@ -334,20 +211,20 @@ class TestYummly( unittest.TestCase ):
 
         results = self.yummly.search( **params )
 
-        criteria = results['criteria']
+        criteria = results.criteria
 
         # verify nutrition
-        nutrition_restrictions = criteria['nutritionRestrictions']
+        nutrition_restrictions = criteria.nutritionRestrictions
         for nut, ranges in nutrition.iteritems():
             assert( nutrition_restrictions[nut]['min'] == ranges['min'] )
             assert( nutrition_restrictions[nut]['max'] == ranges['max'] )
 
     def test_metadata( self ):
-        for key in self.yummly.METADATA_KEYS:
+        for key in self.yummly.METADATA:
             data = self.yummly.metadata( key )
             assert( len(data) > 0 )
             TestYummly.wait(0.5)
 
     def test_metadata_invalid( self ):
-        self.assertRaises( self.yummly.YummlyError, self.yummly.metadata, 'invalid' )
+        self.assertRaises( yummly.YummlyError, self.yummly.metadata, 'invalid' )
 
