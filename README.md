@@ -1,8 +1,10 @@
 # yummly.py
 
-Python library for Yummly API: https://developer.yummly.com
+Python library for Yummly API: [https://developer.yummly.com](https://developer.yummly.com)
 
-Version: 0.1.0
+Version: 0.3.0
+
+**NOTE:** This library and its author is not affliated with Yummly.
 
 ## Installation
 
@@ -14,33 +16,43 @@ $ python setup.py install
 
 ### Current Dependencies
 
-- requests==1.1.0
-- nose==1.2.1 (for testing)
+- requests>=1.1.0
+- nose>=1.2.1 (for testing)
 
 ## Usage
 
-```python
-import yummly
-```
+Use `yummly.Client` to create a client object to interact with the Yummly API.
 
-### Configuration
-
-The Yummly API requires an ID and Key. This can be set by doing:
+The client accepts `api_id`, `api_key`, and `timeout` as init parameters:
 
 ```python
-yummly.api_id = YOUR_API_ID
-yummly.api_key = YOUR_API_KEY
+from yummly import Client
+
+client = Client(api_id=YOUR_API_ID, api_key=YOUR_API_KEY, timeout=TIMEOUT)
+
+search = client.search('green eggs and ham')
+match = search.matches[0]
+
+recipe = client.recipe(match.id)
 ```
 
 ### Search Recipes
+
+API endpoint: `http://api.yummly.com/v1/api/recipes?<params>`
 
 Search for recipes meeting certain criteria:
 
 ```python
 results = yummly.search('bacon')
-```
 
-**NOTE:** Currently, only search by phrase, `q`, is supported. Future versions will add support for additional criteria.
+print 'Total Matches:', results.totalMatchCount
+for match in results.matches:
+    print 'Recipe ID:', match.id
+    print 'Recipe:', match.recipeName
+    print 'Rating:', match.rating
+    print 'Total Time (mins):', match.totalTimeInSeconds / 60.0
+    print '----------------------------------------------------'
+```
 
 Limit your results to a maximum:
 
@@ -76,30 +88,77 @@ params = {
     'nutrition.FAT.max': 15
 }
 
-results = yummly.search( **params )
+results = yummly.search(**params)
 ```
 
-For a full list of support search parameters, see section _The Search Recipes Call_ located at: https://developer.yummly.com/intro
+For a full list of supported search parameters, see section _The Search Recipes Call_ located at: [https://developer.yummly.com/intro](https://developer.yummly.com/intro)
 
-Example search response: https://developer.yummly.com/wiki/search-recipes-response-sample
+Example search response: [https://developer.yummly.com/wiki/search-recipes-response-sample](https://developer.yummly.com/wiki/search-recipes-response-sample)
 
 ### Get Recipe
+
+API endpoint: `http://api.yummly.com/v1/api/recipe/<recipe_id>`
 
 Fetch a recipe by its recipe ID:
 
 ```python
 recipe = yummly.recipe(recipe_id)
+
+print 'Recipe ID:', recipe.id
+print 'Recipe:', recipe.name
+print 'Rating:', recipe.rating
+print 'Total Time:', recipe.totalTime
+print 'Yields:', recipe.yields
+print 'Ingredients:'
+for ingred in recipe.ingredientLines:
+    print ingred
 ```
 
-Example recipe response: https://developer.yummly.com/wiki/get-recipe-response-sample
+Example recipe response: [https://developer.yummly.com/wiki/get-recipe-response-sample](https://developer.yummly.com/wiki/get-recipe-response-sample)
+
+**NOTE:** The Get-Recipe response includes `yield` as a field name. However, `yield` is a keyword in Python so this has been renamed to `yields`.
+
+### Search metadata
+
+API endpoint: `http://api.yummly.com/v1/api/metadata/<metadata_key>`
+
+Yummly provides a metadata endpoint that returns the possible values for allowed/excluded ingredient, diet, allergy, and other search parameters:
+
+```python
+METADATA_KEYS = [
+    'ingredient',
+    'holiday',
+    'diet',
+    'allergy',
+    'technique',
+    'cuisine',
+    'course',
+    'source',
+    'brand',
+]
+
+ingredients = client.metadata('ingredient')
+diets = client.metadata('diet')
+sources = client.metadata('source')
+```
+
+**NOTE:** Yummly's raw API returns this data as a JSONP response which `yummly.py` parses off and then converts to a `list` containing instances of the corresponding metadata class.
+
+## API Model Classes
+
+All underlying API model classes are in `yummly/models.py`. The base class used for all models is a modified `dict` class with attribute-style access (i.e. both `obj.foo` and `obj['foo']` are valid accessor methods).
+
+A derived `dict` class was chosen to accommodate painless conversion to JSON which is a fairly common requirement when using `yummly.py` as an API proxy to feed your applications (e.g. a web app with `yummly.py` running on your server instead of directly using the Yummly API on the frontend).
 
 ## Testing
 
-Tests are located in `tests/`. They can be executed with `nose` by running `run_tests.py` from the root directory.
+Tests are located in `tests/`. They can be executed using `nose` by running `run_tests.py` from the root directory.
 
 ```bash
 $ python run_tests.py
 ```
+
+**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 10 API calls are made when running the tests.
 
 ### Test Config File
 
@@ -107,8 +166,8 @@ A test config file is required to run the tests. Create `tests/config.json` with
 
 ```json
 {
-    "api_id": "your api id",
-    "api_key": "your api key"
+    "api_id": "YOUR_API_ID",
+    "api_key": "YOUR_API_KEY"
 }
 ```
 
@@ -121,5 +180,4 @@ This software is licensed under the FreeBSD License.
 ## TODO
 
 - Provide helpers for complex search parameters like nutrition, flavors, and metadata
-- Metadata look-up
 - Options for sorting search results (maybe)
