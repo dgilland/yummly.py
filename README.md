@@ -4,7 +4,7 @@ Python library for Yummly API: [https://developer.yummly.com](https://developer.
 
 Version: 0.3.0
 
-**NOTE:** This library and its author is not affliated with Yummly.
+**NOTE:** This library and its author are not affliated with Yummly.
 
 ## Installation
 
@@ -116,7 +116,7 @@ for ingred in recipe.ingredientLines:
 
 Example recipe response: [https://developer.yummly.com/wiki/get-recipe-response-sample](https://developer.yummly.com/wiki/get-recipe-response-sample)
 
-**NOTE:** The Get-Recipe response includes `yield` as a field name. However, `yield` is a keyword in Python so this has been renamed to `yields`.
+**NOTE:** Yummly's Get-Recipe response includes `yield` as a field name. However, `yield` is a keyword in Python so this has been renamed to `yields`.
 
 ### Search metadata
 
@@ -175,7 +175,7 @@ This file will be loaded automatically when the tests are run.
 
 ## License
 
-This software is licensed under the FreeBSD License.
+This software is licensed under the BSD License.
 
 ## TODO
 
