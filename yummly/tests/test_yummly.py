@@ -17,7 +17,7 @@ class TestYummly( unittest.TestCase ):
         with open( config_file ) as f:
             config = json.load(f)
 
-        cls.yummly = yummly.Client( api_id=config.get('api_id'), api_key=config.get('api_key') )
+        cls.yummly = yummly.Client( api_id=config.get('api_id'), api_key=config.get('api_key'), retries=1 )
 
         cls.sample_recipe_id = 'Hot-Turkey-Salad-Sandwiches-Allrecipes'
 
@@ -227,4 +227,18 @@ class TestYummly( unittest.TestCase ):
 
     def test_metadata_invalid( self ):
         self.assertRaises( yummly.YummlyError, self.yummly.metadata, 'invalid' )
+
+    def test_timeout_retry( self ):
+        orig_timeout = self.yummly.timeout
+        self.yummly.timeout = 0.01
+
+        retries = 2
+        orig_retries = self.yummly.retries
+        self.yummly.retries = retries
+
+        self.assertRaises( yummly.Timeout, self.yummly.recipe, self.sample_recipe_id )
+        assert( self.yummly._handle_errors_count == retries )
+
+        self.yummly.timeout = orig_timeout
+        self.yummly.retries = orig_retries
 

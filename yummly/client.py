@@ -5,16 +5,32 @@ Python module for Yummly API: https://developer.yummly.com
 import json
 
 import requests
+from requests.exceptions import Timeout
 
 import models
 
 # @note: have found that Yummly's API "hangs" so it might be a good idea to have some reasonable timeout and handle appropriately
 TIMEOUT = 5.0
+RETRIES = 0
 
 def handle_errors( fn ):
     '''Decorator for handling Yummly errors'''
-    def handle( *args, **kargs ):
-        response = fn( *args, **kargs )
+    def handle( self, *args, **kargs ):
+        # @note: `self` is the class this decorator wraps
+
+        # attach a count attribute to the function so we have a hook to test that retry works
+        self._handle_errors_count = 0
+
+        # try to get response until retry limit reached
+        for retry in xrange(0, self.retries+1):
+            try:
+                response = fn( self, *args, **kargs )
+            except Timeout:
+                # stop retrying after reaching max
+                if retry == self.retries:
+                    raise
+
+                self._handle_errors_count += 1
 
         status = response.status_code
 
@@ -40,6 +56,7 @@ class Client( object ):
     :param api_id: Yummly API ID
     :param api_key: Yummly API Key
     :param timeout: API request timeout
+    :param retries: Number of times to retry request if timeout received
     '''
 
     # API URLs
@@ -60,10 +77,11 @@ class Client( object ):
         'brand':        models.MetaBrand,
     }
 
-    def __init__( self, api_id=None, api_key=None, timeout=TIMEOUT ):
+    def __init__( self, api_id=None, api_key=None, timeout=TIMEOUT, retries=RETRIES ):
         self.api_id     = api_id
         self.api_key    = api_key
         self.timeout    = timeout
+        self.retries    = retries or 0
 
     def recipe( self, recipe_id ):
         '''

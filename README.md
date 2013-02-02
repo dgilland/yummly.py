@@ -28,7 +28,11 @@ The client accepts `api_id`, `api_key`, and `timeout` as init parameters:
 ```python
 from yummly import Client
 
-client = Client(api_id=YOUR_API_ID, api_key=YOUR_API_KEY, timeout=TIMEOUT)
+# default option values
+TIMEOUT = 5.0
+RETRIES = 0
+
+client = Client(api_id=YOUR_API_ID, api_key=YOUR_API_KEY, timeout=TIMEOUT, retries=RETRIES)
 
 search = client.search('green eggs and ham')
 match = search.matches[0]
@@ -158,7 +162,7 @@ Tests are located in `tests/`. They can be executed using `nose` by running `run
 $ python run_tests.py
 ```
 
-**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 10 API calls are made when running the tests.
+**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 11 API calls are made when running the tests.
 
 ### Test Config File
 
