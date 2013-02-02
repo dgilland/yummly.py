@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name                = 'yummly',
-    version             = open( 'VERSION' ),
+    version             = open( 'VERSION' ).read(),
     description         = 'Python package for Yummly API: https://developer.yummly.com',
     long_description    = open('README').read(),
     author              = 'Derrick Gilland',
