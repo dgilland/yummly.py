@@ -4,9 +4,9 @@ yummly.py
 Python library for Yummly API:
 `https://developer.yummly.com <https://developer.yummly.com>`_
 
-Version: 0.3.0
+Version: 0.3.1
 
-**NOTE:** This library and its author is not affliated with Yummly.
+**NOTE:** This library and its author are not affliated with Yummly.
 
 Installation
 ------------
@@ -37,7 +37,11 @@ parameters:
 
     from yummly import Client
 
-    client = Client(api_id=YOUR_API_ID, api_key=YOUR_API_KEY, timeout=TIMEOUT)
+    # default option values
+    TIMEOUT = 5.0
+    RETRIES = 0
+
+    client = Client(api_id=YOUR_API_ID, api_key=YOUR_API_KEY, timeout=TIMEOUT, retries=RETRIES)
 
     search = client.search('green eggs and ham')
     match = search.matches[0]
@@ -130,9 +134,9 @@ Fetch a recipe by its recipe ID:
 Example recipe response:
 `https://developer.yummly.com/wiki/get-recipe-response-sample <https://developer.yummly.com/wiki/get-recipe-response-sample>`_
 
-**NOTE:** The Get-Recipe response includes ``yield`` as a field name.
-However, ``yield`` is a keyword in Python so this has been renamed to
-``yields``.
+**NOTE:** Yummly's Get-Recipe response includes ``yield`` as a field
+name. However, ``yield`` is a keyword in Python so this has been renamed
+to ``yields``.
 
 Search metadata
 ~~~~~~~~~~~~~~~
@@ -189,7 +193,7 @@ running ``run_tests.py`` from the root directory.
     $ python run_tests.py
 
 **NOTE:** Running the test suite will use real API calls which will
-count against your call limit. Currently, 10 API calls are made when
+count against your call limit. Currently, 11 API calls are made when
 running the tests.
 
 Test Config File
@@ -210,7 +214,7 @@ This file will be loaded automatically when the tests are run.
 License
 -------
 
-This software is licensed under the FreeBSD License.
+This software is licensed under the BSD License.
 
 TODO
 ----

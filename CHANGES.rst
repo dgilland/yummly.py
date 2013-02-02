@@ -1,3 +1,9 @@
+v0.3.1, 2013-02-02
+~~~~~~~~~~~~~~~~~~
+
+-  Added ``retries`` parameter to ``Client`` which sets the number of
+   additional requests to make after a Yummly timeout. Default is ``0``.
+
 v0.3.0, 2013-01-26
 ~~~~~~~~~~~~~~~~~~
 

@@ -2,7 +2,7 @@
 
 Python library for Yummly API: [https://developer.yummly.com](https://developer.yummly.com)
 
-Version: 0.3.0
+Version: 0.3.1
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
