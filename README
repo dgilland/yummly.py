@@ -18,6 +18,13 @@ Using setup.py
 
     $ python setup.py install
 
+Using pip
+~~~~~~~~~
+
+::
+
+    $ pip install yummly
+
 Current Dependencies
 ~~~~~~~~~~~~~~~~~~~~
 

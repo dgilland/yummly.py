@@ -14,6 +14,12 @@ Version: 0.3.3
 $ python setup.py install
 ```
 
+### Using pip
+
+```bash
+$ pip install yummly
+```
+
 ### Current Dependencies
 
 - requests>=1.1.0
