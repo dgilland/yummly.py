@@ -5,7 +5,7 @@ setup(
     name                = 'yummly',
     version             = open( 'VERSION' ).read(),
     description         = 'Python package for Yummly API: https://developer.yummly.com',
-    long_description    = open('README').read(),
+    long_description    = open( 'README' ).read(),
     author              = 'Derrick Gilland',
     author_email        = 'dgilland@gmail.com',
     url                 = 'https://github.com/dgilland/yummly.py',
