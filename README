@@ -4,7 +4,7 @@ yummly.py
 Python library for Yummly API:
 `https://developer.yummly.com <https://developer.yummly.com>`_
 
-Version: 0.3.3
+Version: 0.3.4
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
@@ -200,7 +200,7 @@ running ``run_tests.py`` from the root directory.
     $ python run_tests.py
 
 **NOTE:** Running the test suite will use real API calls which will
-count against your call limit. Currently, 11 API calls are made when
+count against your call limit. Currently, 20 API calls are made when
 running the tests.
 
 Test Config File
@@ -228,4 +228,3 @@ TODO
 
 -  Provide helpers for complex search parameters like nutrition,
    flavors, and metadata
--  Options for sorting search results (maybe)

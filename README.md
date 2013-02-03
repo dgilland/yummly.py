@@ -2,7 +2,7 @@
 
 Python library for Yummly API: [https://developer.yummly.com](https://developer.yummly.com)
 
-Version: 0.3.3
+Version: 0.3.4
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
@@ -168,7 +168,7 @@ Tests are located in `tests/`. They can be executed using `nose` by running `run
 $ python run_tests.py
 ```
 
-**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 11 API calls are made when running the tests.
+**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 20 API calls are made when running the tests.
 
 ### Test Config File
 
@@ -190,4 +190,3 @@ This software is licensed under the BSD License.
 ## TODO
 
 - Provide helpers for complex search parameters like nutrition, flavors, and metadata
-- Options for sorting search results (maybe)

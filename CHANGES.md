@@ -1,3 +1,10 @@
+### v0.3.4, 2013-02-03
+
+- Handle top-level keys that are not always present in Yummly responses.
+- Provide default values for `Recipe` fields: `rating=0`, `flavors={}`, `totalTime=0`, `totalTimeInSeconds=''`, `numberOfServings=0`, `yields=''`, `attributes={}`.
+- Assert that `Client` `timeout` parameter is >= 0.
+- Assert that `Client` `retries` parameter is >= 0 and an integer.
+
 ### v0.3.3, 2013-02-02
 
 - Added `retries` parameter to `Client` which sets the number of additional requests to make after a Yummly timeout. Default is `0`.
