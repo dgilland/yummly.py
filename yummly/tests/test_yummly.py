@@ -17,7 +17,7 @@ class TestYummly( unittest.TestCase ):
         with open( config_file ) as f:
             config = json.load(f)
 
-        cls.yummly = yummly.Client( api_id=config.get('api_id'), api_key=config.get('api_key'), retries=1 )
+        cls.yummly = yummly.Client( api_id=config.get('api_id'), api_key=config.get('api_key') )
 
         cls.sample_recipe_id = 'Hot-Turkey-Salad-Sandwiches-Allrecipes'
 
@@ -241,4 +241,13 @@ class TestYummly( unittest.TestCase ):
 
         self.yummly.timeout = orig_timeout
         self.yummly.retries = orig_retries
+
+    def test_missing_total_time( self ):
+        # some recipes don't have total time
+        # previous versions of yummly.Client didn't handle this properly
+        recipe_id   = 'Grilled-Tequila-Lime-Chicken-Once-Upon-A-Chef-200041'
+        recipe      = self.yummly.recipe( recipe_id )
+
+        assert( recipe.totalTime == 0 )
+        assert( recipe.totalTimeInSeconds == '' )
 
