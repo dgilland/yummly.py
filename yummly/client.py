@@ -80,7 +80,11 @@ class Client( object ):
     def __init__( self, api_id=None, api_key=None, timeout=TIMEOUT, retries=RETRIES ):
         self.api_id     = api_id
         self.api_key    = api_key
+
+        assert( timeout >= 0 )
         self.timeout    = timeout
+
+        assert( isinstance( retries, int) and retries >= 0 )
         self.retries    = retries or 0
 
     def recipe( self, recipe_id ):
