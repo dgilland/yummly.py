@@ -92,7 +92,6 @@ class Client( object ):
         Yummly get recipe API request
 
         :param recipe_id: recipe id
-        :param asdict: if True, return as dict
 
         '''
 
@@ -114,8 +113,7 @@ class Client( object ):
 
         :param q: search string
         :param maxResult: max results
-        :param start: pagination offset in # of records (e.g. offset=5 means skip first 5 results)
-        :param asdict: if True, return as dict
+        :param start: pagination offset in # of records (e.g. start=5 means skip first 5 results)
         :param **params: optional kargs corresponding to Yummly supported search parameters
 
         '''
