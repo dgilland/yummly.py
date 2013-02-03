@@ -73,18 +73,18 @@ class Recipe( Storage ):
     def __init__( self,
         id,
         name,
-        rating,
-        totalTime,
-        totalTimeInSeconds,
         ingredientLines,
-        flavors,
         nutritionEstimates,
-        numberOfServings,
-        yields,
         images,
-        attributes,
         source,
-        attribution
+        attribution,
+        rating=0,
+        flavors=None,
+        totalTime=0,
+        totalTimeInSeconds='',
+        numberOfServings=0,
+        yields='',
+        attributes=None,
         ):
 
         self.id                 = id
@@ -95,7 +95,7 @@ class Recipe( Storage ):
         self.ingredientLines    = ingredientLines
         self.numberOfServings   = numberOfServings
         self.yields             = yields
-        self.attributes         = attributes
+        self.attributes         = attributes or {}
 
         # @note: for `flavors`, the keys are returned capitalized so normalize to lowercase since search results' flavor keys are lowercase
         flavors = dict( (f.lower(), flavor) for f,flavor in flavors.iteritems() ) if flavors else {}
