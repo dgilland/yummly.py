@@ -103,8 +103,7 @@ class Client( object ):
         # @note: due to `yield` being a keyword, use `yields` instead
         result['yields'] = result['yield']
 
-        # only use fields defined in Recipe model
-        result      = dict( (f, result[f]) for f in models.Recipe._get_fields() )
+        result      = self._filter_data( result, models.Recipe )
         recipe      = models.Recipe( **result )
 
         return recipe
@@ -134,8 +133,7 @@ class Client( object ):
         response    = self._request( url, params=params )
         result      = self._extract_response( response )
 
-        # only use fields defined in SearchResult model
-        result      = dict( (f, result[f]) for f in models.SearchResult._get_fields() )
+        result      = self._filter_data( result, models.SearchResult )
         search_result = models.SearchResult( **result )
 
         return search_result
@@ -195,4 +193,13 @@ class Client( object ):
         parsed  = text[ start:end ]
 
         return json.loads( parsed )
+
+    def _filter_data( self, data, Model ):
+        # filter data using fields supported by Model
+        filtered = {}
+        for f in Model._get_fields():
+            if f in data:
+                filtered[f] = data[f]
+
+        return filtered
 
