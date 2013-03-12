@@ -81,7 +81,7 @@ class Recipe( Storage ):
         rating=0,
         flavors=None,
         totalTime=0,
-        totalTimeInSeconds='',
+        totalTimeInSeconds=0,
         numberOfServings=0,
         yields='',
         attributes=None,
@@ -163,12 +163,12 @@ class SearchMatch( Storage ):
         id,
         recipeName,
         rating,
-        totalTimeInSeconds,
         ingredients,
         flavors,
         smallImageUrls,
-        sourceDisplayName,
-        attributes
+        attributes,
+        totalTimeInSeconds=0,
+        sourceDisplayName=''
         ):
 
         self.id                 = id

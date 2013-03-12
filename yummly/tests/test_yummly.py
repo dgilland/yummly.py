@@ -249,5 +249,5 @@ class TestYummly( unittest.TestCase ):
         recipe      = self.yummly.recipe( recipe_id )
 
         assert( recipe.totalTime == 0 )
-        assert( recipe.totalTimeInSeconds == '' )
+        assert( recipe.totalTimeInSeconds == 0 )
 
