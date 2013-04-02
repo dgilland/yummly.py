@@ -94,7 +94,7 @@ class Recipe( Storage ):
         self.totalTimeInSeconds = totalTimeInSeconds
         self.ingredientLines    = ingredientLines
         self.numberOfServings   = numberOfServings
-        self.yields             = yields
+        self.yields             = yields or ''
         self.attributes         = attributes or {}
 
         # @note: for `flavors`, the keys are returned capitalized so normalize to lowercase since search results' flavor keys are lowercase

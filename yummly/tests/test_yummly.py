@@ -251,3 +251,10 @@ class TestYummly( unittest.TestCase ):
         assert( recipe.totalTime == 0 )
         assert( recipe.totalTimeInSeconds == 0 )
 
+    def test_missing_yield( self ):
+        # some recipes don't have 'yield' attribute
+        recipe_id   = 'Oven-roasted-tomatoes-310681'
+        recipe      = self.yummly.recipe( recipe_id )
+
+        assert( recipe.yields == '' )
+

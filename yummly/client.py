@@ -100,7 +100,7 @@ class Client( object ):
         result      = self._extract_response( response )
 
         # @note: due to `yield` being a keyword, use `yields` instead
-        result['yields'] = result['yield']
+        result['yields'] = result.get( 'yield', '' )
 
         result      = self._filter_data( result, models.Recipe )
         recipe      = models.Recipe( **result )
