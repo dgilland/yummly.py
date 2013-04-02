@@ -74,10 +74,10 @@ class Recipe( Storage ):
         id,
         name,
         ingredientLines,
-        nutritionEstimates,
-        images,
         source,
         attribution,
+        nutritionEstimates=None,
+        images=None,
         rating=0,
         flavors=None,
         totalTime=0,
@@ -90,20 +90,25 @@ class Recipe( Storage ):
         self.id                 = id
         self.name               = name
         self.rating             = rating
-        self.totalTime          = totalTime
-        self.totalTimeInSeconds = totalTimeInSeconds
+        self.totalTime          = totalTime or 0
+        self.totalTimeInSeconds = totalTimeInSeconds or 0
         self.ingredientLines    = ingredientLines
         self.numberOfServings   = numberOfServings
         self.yields             = yields or ''
         self.attributes         = attributes or {}
 
+        self.source             = RecipeSource( **source )
+        self.attribution        = Attribution( **attribution )
+
         # @note: for `flavors`, the keys are returned capitalized so normalize to lowercase since search results' flavor keys are lowercase
         flavors = dict( (f.lower(), flavor) for f,flavor in flavors.iteritems() ) if flavors else {}
         self.flavors            = Flavors( **flavors )
+
+        nutritionEstimates      = nutritionEstimates or []
         self.nutritionEstimates = [ NutritionEstimate( **ne ) for ne in nutritionEstimates ]
+
+        images                  = images or []
         self.images             = [ RecipeImages( **imgs ) for imgs in images ]
-        self.source             = RecipeSource( **source )
-        self.attribution        = Attribution( **attribution )
 
 class Flavors( Storage ):
     def __init__( self, salty=None, meaty=None, piquant=None, bitter=None, sour=None, sweet=None ):
@@ -174,11 +179,11 @@ class SearchMatch( Storage ):
         self.id                 = id
         self.recipeName         = recipeName
         self.rating             = rating
-        self.totalTimeInSeconds = totalTimeInSeconds
+        self.totalTimeInSeconds = totalTimeInSeconds or 0
         self.ingredients        = ingredients
         self.flavors            = Flavors( **(flavors or {}) )
         self.smallImageUrls     = smallImageUrls
-        self.sourceDisplayName  = sourceDisplayName
+        self.sourceDisplayName  = sourceDisplayName or ''
         self.attributes         = attributes
 
 class SearchCriteria( Storage ):
