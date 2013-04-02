@@ -2,7 +2,7 @@
 
 Python library for Yummly API: [https://developer.yummly.com](https://developer.yummly.com)
 
-Version: 0.3.5
+Version: 0.3.6
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
@@ -168,7 +168,7 @@ Tests are located in `tests/`. They can be executed using `nose` by running `run
 $ python run_tests.py
 ```
 
-**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 20 API calls are made when running the tests.
+**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 21 API calls are made when running the tests.
 
 ### Test Config File
 

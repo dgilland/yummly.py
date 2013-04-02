@@ -1,7 +1,13 @@
+### v0.3.6, 2013-04-02
+
+- Fetch recipe `yield` keyword attribute safely from response since it's not guaranteed to be present
+- Supply defaults for `recipe.nutritionEstimates`, `recipe.images`, and `recipe.yields`
+- Ensure `totalTime` and `totalTimeInSeconds` are set to `0` when falsey
+
 ### v0.3.5, 2013-03-12
 
-- Change default value for `Recipe.totalTimeInSeconds`: mirror default returned by search results
-- Change default value for `SearchMatch.sourceDisplayName`: field not guaranteed to exist in return
+- Change default value for `Recipe.totalTimeInSeconds` to `0`: mirror default returned by search results
+- Change default value for `SearchMatch.sourceDisplayName` to `''`: field not guaranteed to exist in return
 
 ### v0.3.4, 2013-02-03
 
