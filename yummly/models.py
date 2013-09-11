@@ -70,160 +70,120 @@ class Storage( dict ):
 
 # @note: use `Recipe.yields` instead of API `yield` since `yield` is a keyword
 class Recipe( Storage ):
-    def __init__( self,
-        id,
-        name,
-        ingredientLines,
-        source,
-        attribution,
-        nutritionEstimates=None,
-        images=None,
-        rating=0,
-        flavors=None,
-        totalTime=0,
-        totalTimeInSeconds=0,
-        numberOfServings=0,
-        yields='',
-        attributes=None,
-        ):
+    def __init__( self, **kargs ):
 
-        self.id                 = id
-        self.name               = name
-        self.rating             = rating
-        self.totalTime          = totalTime or 0
-        self.totalTimeInSeconds = totalTimeInSeconds or 0
-        self.ingredientLines    = ingredientLines
-        self.numberOfServings   = numberOfServings
-        self.yields             = yields or ''
-        self.attributes         = attributes or {}
+        self.id                 = kargs['id']
+        self.name               = kargs['name']
+        self.rating             = kargs.get('rating')
+        self.totalTime          = kargs.get('totalTime') or 0
+        self.totalTimeInSeconds = kargs.get('totalTimeInSeconds') or 0
+        self.ingredientLines    = kargs.get('ingredientLines') or  []
+        self.numberOfServings   = kargs.get('numberOfServings')
+        self.yields             = kargs.get('yields')
+        self.attributes         = kargs.get('attributes') or {}
 
-        self.source             = RecipeSource( **source )
-        self.attribution        = Attribution( **attribution )
+        self.source             = RecipeSource( **(kargs.get('source') or {}) )
+        self.attribution        = Attribution( **(kargs.get('attribution') or {}) )
 
         # @note: for `flavors`, the keys are returned capitalized so normalize to lowercase since search results' flavor keys are lowercase
-        flavors = dict( (f.lower(), flavor) for f,flavor in flavors.iteritems() ) if flavors else {}
-        self.flavors            = Flavors( **flavors )
+        flavors                 = kargs.get('flavors') or {}
+        self.flavors            = Flavors( **{ f.lower(): flavor for f,flavor in flavors.iteritems() } )
 
-        nutritionEstimates      = nutritionEstimates or []
-        self.nutritionEstimates = [ NutritionEstimate( **ne ) for ne in nutritionEstimates ]
+        self.nutritionEstimates = [ NutritionEstimate( **ne ) for ne in (kargs.get('nutritionEstimates') or []) ]
 
-        images                  = images or []
-        self.images             = [ RecipeImages( **imgs ) for imgs in images ]
+        self.images             = [ RecipeImages( **imgs ) for imgs in (kargs.get('images') or []) ]
 
 class Flavors( Storage ):
-    def __init__( self, salty=None, meaty=None, piquant=None, bitter=None, sour=None, sweet=None ):
-        self.salty      = salty
-        self.meaty      = meaty
-        self.piquant    = piquant
-        self.bitter     = bitter
-        self.sour       = sour
-        self.sweet      = sweet
+    def __init__( self, **kargs ):
+        self.salty      = kargs.get('salty')
+        self.meaty      = kargs.get('meaty')
+        self.piquant    = kargs.get('piquant')
+        self.bitter     = kargs.get('bitter')
+        self.sour       = kargs.get('sour')
+        self.sweet      = kargs.get('sweet')
 
 class Attribution( Storage ):
-    def __init__( self, html, url, text, logo ):
-        self.html       = html
-        self.url        = url
-        self.text       = text
-        self.logo       = logo
+    def __init__( self, **kargs ):
+        self.html       = kargs.get('html')
+        self.url        = kargs.get('url')
+        self.text       = kargs.get('text')
+        self.logo       = kargs.get('logo')
 
 class NutritionEstimate( Storage ):
-    def __init__( self, attribute, description, value, unit ):
-        self.attribute      = attribute
-        self.description    = description
-        self.value          = value
-        self.unit           = NutritionUnit( **unit )
+    def __init__( self, **kargs ):
+        self.attribute      = kargs.get('attribute')
+        self.description    = kargs.get('description')
+        self.value          = kargs.get('value')
+        self.unit           = NutritionUnit( **(kargs.get('unit') or {}) )
 
 class NutritionUnit( Storage ):
-    def __init__( self,  id, name, abbreviation, plural, pluralAbbreviation ):
-        self.id                 = id
-        self.abbreviation       = abbreviation
-        self.plural             = plural
-        self.pluralAbbreviation = pluralAbbreviation
+    def __init__( self, **kargs ):
+        self.id                 = kargs['id']
+        self.abbreviation       = kargs.get('abbreviation')
+        self.plural             = kargs.get('plural')
+        self.pluralAbbreviation = kargs.get('pluralAbbreviation')
 
 class RecipeImages( Storage ):
-    def __init__( self, hostedLargeUrl, hostedSmallUrl ):
-        self.hostedLargeUrl     = hostedLargeUrl
-        self.hostedSmallUrl     = hostedSmallUrl
+    def __init__( self, **kargs ):
+        self.hostedLargeUrl     = kargs.get('hostedLargeUrl')
+        self.hostedSmallUrl     = kargs.get('hostedSmallUrl')
 
 class RecipeSource( Storage ):
-    def __init__( self, sourceRecipeUrl, sourceSiteUrl, sourceDisplayName ):
-        self.sourceRecipeUrl    = sourceRecipeUrl
-        self.sourceSiteUrl      = sourceSiteUrl
-        self.sourceDisplayName  = sourceDisplayName
+    def __init__( self, **kargs ):
+        self.sourceRecipeUrl    = kargs.get('sourceRecipeUrl')
+        self.sourceSiteUrl      = kargs.get('sourceSiteUrl')
+        self.sourceDisplayName  = kargs.get('sourceDisplayName')
 
 ##################################################
 # Search related models
 ##################################################
 
 class SearchResult( Storage ):
-    def __init__( self, totalMatchCount, criteria, facetCounts, matches, attribution ):
-        self.totalMatchCount    = totalMatchCount
-        self.criteria           = SearchCriteria( **criteria )
-        self.facetCounts        = facetCounts
-        self.matches            = [ SearchMatch( **m ) for m in matches ]
-        self.attribution        = Attribution( **attribution )
+    def __init__( self, **kargs ):
+        self.totalMatchCount    = kargs['totalMatchCount']
+        self.criteria           = SearchCriteria( **kargs['criteria'] )
+        self.facetCounts        = kargs['facetCounts']
+        self.matches            = [ SearchMatch( **m ) for m in kargs['matches'] ]
+        self.attribution        = Attribution( **kargs['attribution'] )
 
 class SearchMatch( Storage ):
-    def __init__( self,
-        id,
-        recipeName,
-        rating,
-        ingredients,
-        flavors,
-        smallImageUrls,
-        attributes,
-        totalTimeInSeconds=0,
-        sourceDisplayName=''
-        ):
+    def __init__( self, **kargs ):
 
-        self.id                 = id
-        self.recipeName         = recipeName
-        self.rating             = rating
-        self.totalTimeInSeconds = totalTimeInSeconds or 0
-        self.ingredients        = ingredients
-        self.flavors            = Flavors( **(flavors or {}) )
-        self.smallImageUrls     = smallImageUrls
-        self.sourceDisplayName  = sourceDisplayName or ''
-        self.attributes         = attributes
+        self.id                 = kargs['id']
+        self.recipeName         = kargs['recipeName']
+        self.rating             = kargs.get('rating')
+        self.totalTimeInSeconds = kargs.get('totalTimeInSeconds', 0)
+        self.ingredients        = kargs.get('ingredients')
+        self.flavors            = Flavors( **(kargs.get('flavors') or {}) )
+        self.smallImageUrls     = kargs.get('smallImageUrls')
+        self.sourceDisplayName  = kargs.get('sourceDisplayName', '')
+        self.attributes         = kargs.get('attributes')
 
 class SearchCriteria( Storage ):
-    def __init__( self,
-        maxResults,
-        resultsToSkip,
-        terms,
-        requirePictures,
-        facetFields,
-        allowedIngredients,
-        excludedIngredients,
-        attributeRanges=None,
-        allowedAttributes=None,
-        excludedAttributes=None,
-        allowedDiets=None,
-        nutritionRestrictions=None
-        ):
+    def __init__( self, **kargs ):
 
-        self.maxResults             = maxResults
-        self.resultsToSkip          = resultsToSkip
-        self.terms                  = terms
-        self.requirePictures        = requirePictures
-        self.facetFields            = facetFields
-        self.allowedIngredients     = allowedIngredients
-        self.excludedIngredients    = excludedIngredients
-        self.attributeRanges        = attributeRanges or {}
-        self.allowedAttributes      = allowedAttributes or []
-        self.excludedAttributes     = excludedAttributes or []
-        self.allowedDiets           = allowedDiets or []
-        self.nutritionRestrictions  = nutritionRestrictions or {}
+        self.maxResults             = kargs.get('maxResults')
+        self.resultsToSkip          = kargs.get('resultsToSkip')
+        self.terms                  = kargs.get('terms')
+        self.requirePictures        = kargs.get('requirePictures')
+        self.facetFields            = kargs.get('facetFields')
+        self.allowedIngredients     = kargs.get('allowedIngredients')
+        self.excludedIngredients    = kargs.get('excludedIngredients')
+        self.attributeRanges        = kargs.get('attributeRanges', {})
+        self.allowedAttributes      = kargs.get('allowedAttributes', [])
+        self.excludedAttributes     = kargs.get('excludedAttributes', [])
+        self.allowedDiets           = kargs.get('allowedDiets', [])
+        self.nutritionRestrictions  = kargs.get('nutritionRestrictions', {})
 
 ##################################################
 # Metadata related models
 ##################################################
 
 class MetaAttribute( Storage ):
-    def __init__( self, id, description, searchValue ):
-        self.id             = id
-        self.description    = description
-        self.searchValue    = searchValue
+    def __init__( self, **kargs ):
+        self.id             = kargs['id']
+        self.description    = kargs['description']
+        self.searchValue    = kargs['searchValue']
 
 class MetaHoliday( MetaAttribute ):
     pass
@@ -240,12 +200,15 @@ class MetaSource( MetaAttribute ):
 class MetaBrand( MetaAttribute ):
     pass
 
+class MetaTechnique( MetaAttribute ):
+    pass
+
 class MetaRestriction( Storage ):
-    def __init__( self, id, shortDescription, longDescription, searchValue ):
-        self.id                 = id
-        self.shortDescription   = shortDescription
-        self.longDescription    = longDescription
-        self.searchValue        = searchValue
+    def __init__( self, **kargs ):
+        self.id                 = kargs['id']
+        self.shortDescription   = kargs['shortDescription']
+        self.longDescription    = kargs['longDescription']
+        self.searchValue        = kargs['searchValue']
 
 class MetaDiet( MetaRestriction ):
     pass
@@ -254,16 +217,10 @@ class MetaAllergy( MetaRestriction ):
     pass
 
 class MetaIngredient( Storage ):
-    def __init__( self, id, term, searchValue, ingredientId, useCount ):
-        self.id             = id
-        self.term           = term
-        self.searchValue    = searchValue
-        self.ingredientId   = ingredientId
-        self.useCount       = useCount
-
-class MetaTechnique( Storage ):
-    def __init__( self, id, name, group, searchValue ):
-        self.id             = id
-        self.name           = name
-        self.group          = searchValue
+    def __init__( self, **kargs ):
+        self.id             = kargs['id']
+        self.term           = kargs['term']
+        self.searchValue    = kargs['searchValue']
+        self.ingredientId   = kargs['ingredientId']
+        self.useCount       = kargs['useCount']
 

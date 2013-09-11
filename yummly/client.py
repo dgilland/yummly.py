@@ -102,7 +102,6 @@ class Client( object ):
         # @note: due to `yield` being a keyword, use `yields` instead
         result['yields'] = result.get( 'yield', '' )
 
-        result      = self._filter_data( result, models.Recipe )
         recipe      = models.Recipe( **result )
 
         return recipe
@@ -131,7 +130,6 @@ class Client( object ):
         response    = self._request( url, params=params )
         result      = self._extract_response( response )
 
-        result      = self._filter_data( result, models.SearchResult )
         search_result = models.SearchResult( **result )
 
         return search_result
@@ -187,7 +185,7 @@ class Client( object ):
 
         text    = response.text
         start   = text.index('[')
-        end     = text.index(']') + 1
+        end     = text.rfind(']') + 1
         parsed  = text[ start:end ]
 
         return json.loads( parsed )

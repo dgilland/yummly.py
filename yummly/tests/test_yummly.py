@@ -46,26 +46,6 @@ class TestYummly( unittest.TestCase ):
         # we got some matches
         assert( len( results.matches ) > 0 )
 
-    def test_search_pagination( self ):
-        '''Test search pagination'''
-
-        q = 'fish'
-        maxResult = 10
-
-        results = self.yummly.search( q, maxResult=maxResult )
-
-        # verify maxResult enforced
-        len_matches = len( results.matches )
-        assert( len_matches == maxResult )
-
-        # sanity check that grand total of matching recipes is at least as many as matches returned
-        assert( results.totalMatchCount >= len_matches )
-
-        # check that offsetting works as expected: start is number of records to skip
-        start = 5
-        offset_results = self.yummly.search( q, maxResult=maxResult, start=start )
-        assert( offset_results.matches[0].id == results.matches[start].id )
-
     def test_recipe_from_search( self ):
         '''
         Test that recipe fetched from search matches up with search results
@@ -257,4 +237,12 @@ class TestYummly( unittest.TestCase ):
         recipe      = self.yummly.recipe( recipe_id )
 
         assert( recipe.yields == '' )
+
+    def test_missing_images( self ):
+        recipe_id   = 'Smoked-Salmon-Food-Network'
+        recipe      = self.yummly.recipe( recipe_id )
+
+        for img in recipe.images:
+            assert img.hostedLargeUrl is None
+            assert img.hostedSmallUrl is None
 
