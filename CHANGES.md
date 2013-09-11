@@ -1,3 +1,9 @@
+### v0.4.0, 2013-09-10
+
+- Saner defaults for API data attributes
+- Use `**kargs` in model class `__init__`s to avoid duplication of defaults/assignments
+- Use `kargs.get()` for API data attributes that may or may not be available to avoid key errors
+
 ### v0.3.6, 2013-04-02
 
 - Fetch recipe `yield` keyword attribute safely from response since it's not guaranteed to be present

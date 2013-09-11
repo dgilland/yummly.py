@@ -2,7 +2,7 @@
 
 Python library for Yummly API: [https://developer.yummly.com](https://developer.yummly.com)
 
-Version: 0.3.6
+Version: 0.4.0
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
@@ -23,7 +23,6 @@ $ pip install yummly
 ### Current Dependencies
 
 - requests>=1.1.0
-- nose>=1.2.1 (for testing)
 
 ## Usage
 
@@ -162,13 +161,17 @@ A derived `dict` class was chosen to accommodate painless conversion to JSON whi
 
 ## Testing
 
-Tests are located in `tests/`. They can be executed using `nose` by running `run_tests.py` from the root directory.
+Tests are located in `yummly/tests/`. They can be executed using `pytest` from the root directory using `makefile` or `pytest`.
 
 ```bash
-$ python run_tests.py
+# using makefile
+$ makefile test
+
+# using pytest directly
+$ py.test yummly
 ```
 
-**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 21 API calls are made when running the tests.
+**NOTE:** Running the test suite will use real API calls which will count against your call limit. Currently, 22 API calls are made when running the tests.
 
 ### Test Config File
 

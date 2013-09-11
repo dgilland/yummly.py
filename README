@@ -1,10 +1,9 @@
 yummly.py
 =========
 
-Python library for Yummly API:
-`https://developer.yummly.com <https://developer.yummly.com>`_
+Python library for Yummly API: https://developer.yummly.com
 
-Version: 0.3.6
+Version: 0.4.0
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
@@ -14,14 +13,14 @@ Installation
 Using setup.py
 ~~~~~~~~~~~~~~
 
-::
+.. code:: bash
 
     $ python setup.py install
 
 Using pip
 ~~~~~~~~~
 
-::
+.. code:: bash
 
     $ pip install yummly
 
@@ -29,7 +28,6 @@ Current Dependencies
 ~~~~~~~~~~~~~~~~~~~~
 
 -  requests>=1.1.0
--  nose>=1.2.1 (for testing)
 
 Usage
 -----
@@ -40,7 +38,7 @@ Yummly API.
 The client accepts ``api_id``, ``api_key``, and ``timeout`` as init
 parameters:
 
-::
+.. code:: python
 
     from yummly import Client
 
@@ -62,7 +60,7 @@ API endpoint: ``http://api.yummly.com/v1/api/recipes?<params>``
 
 Search for recipes meeting certain criteria:
 
-::
+.. code:: python
 
     results = yummly.search('bacon')
 
@@ -76,21 +74,21 @@ Search for recipes meeting certain criteria:
 
 Limit your results to a maximum:
 
-::
+.. code:: python
 
     # return the first 10 results
     results = yummly.search('chicken marsala', maxResults=10)
 
 Offset the results for pagination:
 
-::
+.. code:: python
 
     # return 2nd page of results
     results = yummly.search('pulled pork', maxResults=10, start=10)
 
 Provide search parameters:
 
-::
+.. code:: python
 
     params = {
         'q': 'pork chops',
@@ -112,11 +110,10 @@ Provide search parameters:
     results = yummly.search(**params)
 
 For a full list of supported search parameters, see section *The Search
-Recipes Call* located at:
-`https://developer.yummly.com/intro <https://developer.yummly.com/intro>`_
+Recipes Call* located at: https://developer.yummly.com/intro
 
 Example search response:
-`https://developer.yummly.com/wiki/search-recipes-response-sample <https://developer.yummly.com/wiki/search-recipes-response-sample>`_
+https://developer.yummly.com/wiki/search-recipes-response-sample
 
 Get Recipe
 ~~~~~~~~~~
@@ -125,7 +122,7 @@ API endpoint: ``http://api.yummly.com/v1/api/recipe/<recipe_id>``
 
 Fetch a recipe by its recipe ID:
 
-::
+.. code:: python
 
     recipe = yummly.recipe(recipe_id)
 
@@ -139,7 +136,7 @@ Fetch a recipe by its recipe ID:
         print ingred
 
 Example recipe response:
-`https://developer.yummly.com/wiki/get-recipe-response-sample <https://developer.yummly.com/wiki/get-recipe-response-sample>`_
+https://developer.yummly.com/wiki/get-recipe-response-sample
 
 **NOTE:** Yummly's Get-Recipe response includes ``yield`` as a field
 name. However, ``yield`` is a keyword in Python so this has been renamed
@@ -153,7 +150,7 @@ API endpoint: ``http://api.yummly.com/v1/api/metadata/<metadata_key>``
 Yummly provides a metadata endpoint that returns the possible values for
 allowed/excluded ingredient, diet, allergy, and other search parameters:
 
-::
+.. code:: python
 
     METADATA_KEYS = [
         'ingredient',
@@ -192,15 +189,19 @@ Yummly API on the frontend).
 Testing
 -------
 
-Tests are located in ``tests/``. They can be executed using ``nose`` by
-running ``run_tests.py`` from the root directory.
+Tests are located in ``yummly/tests/``. They can be executed using
+``pytest`` from the root directory using ``makefile`` or ``pytest``.
 
-::
+.. code:: bash
 
-    $ python run_tests.py
+    # using makefile
+    $ makefile test
+
+    # using pytest directly
+    $ py.test yummly
 
 **NOTE:** Running the test suite will use real API calls which will
-count against your call limit. Currently, 21 API calls are made when
+count against your call limit. Currently, 22 API calls are made when
 running the tests.
 
 Test Config File
@@ -209,7 +210,7 @@ Test Config File
 A test config file is required to run the tests. Create
 ``tests/config.json`` with the following properties:
 
-::
+.. code:: json
 
     {
         "api_id": "YOUR_API_ID",

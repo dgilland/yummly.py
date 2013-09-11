@@ -9,7 +9,7 @@ setup(
     author              = 'Derrick Gilland',
     author_email        = 'dgilland@gmail.com',
     url                 = 'https://github.com/dgilland/yummly.py',
-    packages            = [ 'yummly', 'yummly.tests' ],
+    packages            = [ 'yummly' ],
     install_requires    = open( 'requirements.txt' ).read().split(),
     keywords            = 'yummly recipes',
     license             = 'BSD',
