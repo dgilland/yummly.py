@@ -53,7 +53,7 @@ class Storage( dict ):
             raise AttributeError(key)
 
     def __repr__(self):
-		return '%s(%s)' % ( self.__class__.__name__, dict.__repr__(self) )
+	return '%s(%s)' % ( self.__class__.__name__, dict.__repr__(self) )
 
     @classmethod
     def _get_fields( cls ):
