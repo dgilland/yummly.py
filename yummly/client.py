@@ -146,7 +146,6 @@ class Client( object ):
             data    = [ MetaClass( **md ) for md in self._extract_metadata( response ) ]
         except Exception:
             raise YummlyError( 'Could not extract metadata due to malformed data' )
-
         return data
 
     ### Helper functions
