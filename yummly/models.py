@@ -265,16 +265,7 @@ class MetaDiet(Storage):
         self.type = kargs['type']
 
 
-class MetaRestriction(Storage):
-    """Restriction metadata model."""
-    def __init__(self, **kargs):
-        self.id = kargs['id']
-        self.shortDescription = kargs['shortDescription']
-        self.longDescription = kargs['longDescription']
-        self.searchValue = kargs['searchValue']
-
-
-class MetaAllergy(MetaRestriction):
+class MetaAllergy(Storage):
     """Allergy metadata model."""
     def __init__(self, **kargs):
         self.id = kargs['id']
