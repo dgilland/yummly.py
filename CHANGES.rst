@@ -2,17 +2,23 @@ Changelog
 =========
 
 
+v0.5.0 (2014-12-01)
+-------------------
+
+- Updated ``Meta*`` model classes based on changes to Yummly API. Thanks flyingfrog81_!
+
+
 v0.4.1 (2014-11-22)
 -------------------
 
-- Fix indentation issue in models.py.
+- Fix indentation issue in models.py. Thanks fredthekid_!
 
 
 v0.4.0 (2013-09-10)
 -------------------
 
 -  Saner defaults for API data attributes
--  Use ``**kargs`` in model class ``__init__``\ s to avoid duplication
+-  Use ``**kargs`` in model class ``__init__``s to avoid duplication
    of defaults/assignments
 -  Use ``kargs.get()`` for API data attributes that may or may not be
    available to avoid key errors
@@ -79,3 +85,7 @@ v0.1.0 (2013-01-13)
 -------------------
 
 -  Initial release.
+
+
+.. _fredthekid: https://github.com/fredthekid
+.. _flyingfrog81: https://github.com/flyingfrog81
