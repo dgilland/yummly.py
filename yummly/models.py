@@ -181,9 +181,12 @@ class SearchCriteria( Storage ):
 
 class MetaAttribute( Storage ):
     def __init__( self, **kargs ):
-        self.id             = kargs['id']
-        self.description    = kargs['description']
-        self.searchValue    = kargs['searchValue']
+        self.description        = kargs['description']
+        self.id                 = kargs['id']
+        self.localesAvailableIn = kargs['localesAvailableIn']
+        self.name               = kargs['name']
+        self.searchValue        = kargs['searchValue']
+        self.type               = kargs['type']
 
 class MetaHoliday( MetaAttribute ):
     pass
@@ -194,14 +197,29 @@ class MetaCuisine( MetaAttribute ):
 class MetaCourse( MetaAttribute ):
     pass
 
-class MetaSource( MetaAttribute ):
-    pass
-
-class MetaBrand( MetaAttribute ):
-    pass
-
 class MetaTechnique( MetaAttribute ):
     pass
+
+class MetaSource( Storage ):
+    def __init__( self, **kargs ):
+        self.faviconUrl     = kargs['faviconUrl']
+        self.description    = kargs['description']
+        self.searchValue    = kargs['searchValue']
+
+class MetaBrand( Storage ):
+    def __init__( self, **kargs ):
+        self.faviconUrl     = kargs['faviconUrl']
+        self.description    = kargs['description']
+        self.searchValue    = kargs['searchValue']
+
+class MetaDiet( Storage ):
+    def __init__( self, **kargs ):
+        self.id                 = kargs['id']
+        self.localesAvailableIn = kargs['localesAvailableIn']
+        self.longDescription    = kargs['longDescription']
+        self.searchValue        = kargs['searchValue']
+        self.shortDescription   = kargs['shortDescription']
+        self.type               = kargs['type']
 
 class MetaRestriction( Storage ):
     def __init__( self, **kargs ):
@@ -210,17 +228,18 @@ class MetaRestriction( Storage ):
         self.longDescription    = kargs['longDescription']
         self.searchValue        = kargs['searchValue']
 
-class MetaDiet( MetaRestriction ):
-    pass
-
 class MetaAllergy( MetaRestriction ):
-    pass
+    def __init__( self, **kargs ):
+        self.id                 = kargs['id']
+        self.localesAvailableIn = kargs['localesAvailableIn']
+        self.longDescription    = kargs['longDescription']
+        self.shortDescription   = kargs['shortDescription']
+        self.searchValue        = kargs['searchValue']
+        self.type               = kargs['type']
 
 class MetaIngredient( Storage ):
     def __init__( self, **kargs ):
-        self.id             = kargs['id']
+        self.description    = kargs['description']
         self.term           = kargs['term']
         self.searchValue    = kargs['searchValue']
-        self.ingredientId   = kargs['ingredientId']
-        self.useCount       = kargs['useCount']
 

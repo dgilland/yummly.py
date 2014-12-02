@@ -236,7 +236,7 @@ class TestYummly( unittest.TestCase ):
         recipe_id   = 'Oven-roasted-tomatoes-310681'
         recipe      = self.yummly.recipe( recipe_id )
 
-        assert( recipe.yields == '' )
+        assert( recipe.yields == None )
 
     def test_missing_images( self ):
         recipe_id   = 'Smoked-Salmon-Food-Network'
