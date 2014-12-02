@@ -45,7 +45,6 @@ class Tox(TestCommand):
 
 
 setup(
-setup(
     name=meta['__title__'],
     version=meta['__version__'],
     url=meta['__url__'],
@@ -67,4 +66,3 @@ setup(
         'License :: OSI Approved :: MIT License'
     ]
 )
-
