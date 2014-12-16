@@ -59,13 +59,13 @@ Search for recipes meeting certain criteria:
 
     results = yummly.search('bacon')
 
-    print 'Total Matches:', results.totalMatchCount
+    print('Total Matches:', results.totalMatchCount)
     for match in results.matches:
-        print 'Recipe ID:', match.id
-        print 'Recipe:', match.recipeName
-        print 'Rating:', match.rating
-        print 'Total Time (mins):', match.totalTimeInSeconds / 60.0
-        print '----------------------------------------------------'
+        print('Recipe ID:', match.id)
+        print('Recipe:', match.recipeName)
+        print('Rating:', match.rating)
+        print('Total Time (mins):', match.totalTimeInSeconds / 60.0)
+        print('----------------------------------------------------')
 
 
 Limit your results to a maximum:
@@ -128,14 +128,14 @@ Fetch a recipe by its recipe ID:
 
     recipe = yummly.recipe(recipe_id)
 
-    print 'Recipe ID:', recipe.id
-    print 'Recipe:', recipe.name
-    print 'Rating:', recipe.rating
-    print 'Total Time:', recipe.totalTime
-    print 'Yields:', recipe.yields
-    print 'Ingredients:'
+    print('Recipe ID:', recipe.id)
+    print('Recipe:', recipe.name)
+    print('Rating:', recipe.rating)
+    print('Total Time:', recipe.totalTime)
+    print('Yields:', recipe.yields)
+    print('Ingredients:')
     for ingred in recipe.ingredientLines:
-        print ingred
+        print(ingred)
 
 
 Example recipe response: https://developer.yummly.com/wiki/get-recipe-response-sample
