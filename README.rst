@@ -3,7 +3,7 @@ yummly.py
 
 |version| |license|
 
-Python library for `Yummly API <https://developer.yummly.com](https://developer.yummly.com>`_
+Python library for `Yummly API <https://developer.yummly.com>`_
 
 **NOTE:** This library and its author are not affliated with Yummly.
 
