@@ -3,7 +3,7 @@
 Core objects imported here.
 """
 
-from client import Client, YummlyError, Timeout
+from .client import Client, YummlyError, Timeout
 
 from .__meta__ import (
     __title__,

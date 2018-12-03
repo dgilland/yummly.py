@@ -93,7 +93,7 @@ class Recipe(Storage):
         # to lowercase since search results' flavor keys are lowercase.
         flavors = kargs.get('flavors') or {}
         self.flavors = Flavors(**{key.lower(): value
-                                  for key, value in flavors.iteritems()})
+                                  for key, value in flavors.items()})
 
         self.nutritionEstimates = [NutritionEstimate(**nute)
                                    for nute in (kargs.get('nutritionEstimates')
