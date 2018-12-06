@@ -4,10 +4,11 @@
 from functools import wraps
 import json
 
+import yummly.models as models
+
 import requests
 from requests.exceptions import Timeout
 
-import models
 
 
 # NOTE: Have found that Yummly's API "hangs" so it might be a good idea to have
@@ -27,7 +28,7 @@ def handle_errors(func):
         self._handle_errors_count = 0
 
         # try to get response until retry limit reached
-        for retry in xrange(0, self.retries + 1):
+        for retry in range(0, self.retries + 1):
             try:
                 response = func(self, *args, **kargs)
             except Timeout:
